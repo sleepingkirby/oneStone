@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "oneStone",
   "version": "1.0",
-  "description": "Steps twitter from running setInterval()",
+  "description": "Stops twitter from reloading the page after set time (setInterval()).",
   "permissions": [
     "storage",
     "declarativeContent",
