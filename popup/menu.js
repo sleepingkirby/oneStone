@@ -14,11 +14,6 @@ return rtrn;
 }
 
 
-function reportErr(error){
-console.error('PSJS: Failed to insert content script into tab/page: ' + error.message);
-}
-
-
 function tgglBtn( sid, lid, on, off){
 var el=document.getElementById(sid);
   if(!el || el==null || el==""){
@@ -55,7 +50,14 @@ function startListen(){
         chrome.storage.local.set(obj,
           function (){
             //tgglBtn(e.target.id, e.target.id+'Lbl', tgglHsh[e.target.id][1], tgglHsh[e.taret.id][0]);
-          getCurHost(function(d){console.log(d);}, {});
+            getCurHost(function(d){
+              if(d.host=='twitter.com'){
+                chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+                  chrome.tabs.reload(tabs[0].id, {bypassCache:true});
+                });
+              }
+            }, {});
+
           let nsfw=document.getElementById('nsfw').checked;
           let on=nsfw?'./oneStoneOnNSFW.png':'./oneStoneOnSFW.png';
             if(e.target.checked){
@@ -69,7 +71,13 @@ function startListen(){
       break;
       case 'nsfw':
       obj['nsfw']=e.target.checked;
-        chrome.storage.local.set(obj);
+        chrome.storage.local.set(obj,function(){
+        let on=e.target.checked?'./oneStoneOnNSFW.png':'./oneStoneOnSFW.png';
+        let el=document.getElementById('on');
+          if(el.checked){
+          el.nextElementSibling.firstElementChild.src=on;
+          }
+        });
       break;
       default:
       break;
@@ -96,7 +104,16 @@ function getCurHost( cbFunc, cbFuncPrms ){
   });
 }
 
-chrome.storage.local.get('nsfw',function(d){
+chrome.storage.local.get(null,function(d){
 document.getElementById('nsfw').checked=d.nsfw;
+let onEl=document.getElementById('on');
+onEl.checked=d.on;
+let on=d.nsfw?'./oneStoneOnNSFW.png':'./oneStoneOnSFW.png';
+  if(d.on){
+  onEl.nextElementSibling.firstElementChild.src=on;
+  }
+  else{
+  onEl.nextElementSibling.firstElementChild.src='./oneStoneOff.png';
+  }
 });
 startListen();
