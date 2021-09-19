@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "oneStone",
   "version": "1.0",
-  "description": "Stops twitter from reloading the page after set time (setInterval()).",
+  "description": "Stops twitter from auto reloading the page when reading your feed. Dedicated to my wife.",
   "permissions": [
     "storage",
     "declarativeContent",
